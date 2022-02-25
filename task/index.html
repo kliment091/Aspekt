@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To Do</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="papper">
+      <div class="topline"></div>
+      <div class="inputs">
+        <!-- name -->
+        <input id="text" placeholder="Name" required type="text" />
+        <!-- date picker -->
+        <input id="date" required type="date" />
+        <!-- checkbox -->
+        <input id="browse" onkeyup="search()" placeholder="Search by date" />
+        <input type="checkbox" id="checkCheck" onclick="checkCheck()" />
+        <button type="submit" id="add">Add</button>
+      </div>
+
+      <div class="table">
+        <table>
+          <thead>
+            <th id="btn_Name">Name</th>
+            <th id="btn_Date">Date</th>
+            <th id="btn_Status">Status</th>
+          </thead>
+          <tbody class="tabela"></tbody>
+        </table>
+      </div>
+
+      <!--  end of papper -->
+    </div>
+    <script>
+      //object declaration
+      var array = [];
+      function toDo(name, date, status) {
+        this.name = name;
+        this.date = date;
+        this.status = status;
+      }
+      //VARS
+      var text = document.getElementById("text");
+      var date = document.getElementById("date");
+      var btn = document.getElementById("add");
+      var status = document.getElementById("status");
+      //change status
+
+      function stat(e) {
+        brother = e.parentNode.previousSibling.previousSibling.innerText;
+        for (i = 0; i < array.length; i++) {
+          if (e.checked && brother == array[i].name) {
+            array[i].status = "true";
+          } else {
+          }
+        }
+      }
+      //edit NAME and edit date
+      function editN(e) {
+        for (i = 0; i < array.length; i++) {
+          if (e.className == i) {
+            array[i].name = e.innerText;
+          }
+        }
+      }
+      function editD(e) {
+        for (i = 0; i < array.length; i++) {
+          if (e.className == "date" + " " + i) {
+            array[i].date = e.innerText;
+          }
+        }
+      }
+
+      //ADDbtn function
+      btn.addEventListener("click", function () {
+        if (text.value == "" || date.value == "") {
+          alert("fill the empty inputs");
+        } else {
+          document.getElementsByClassName("tabela")[0].innerHTML = "";
+          array.push(new toDo(text.value, date.value, "false"));
+
+          fill(array);
+          text.value = "";
+          date.value = "";
+        }
+      });
+
+      //sorting btns
+      var btn_Name = document.getElementById("btn_Name");
+      var btn_Date = document.getElementById("btn_Date");
+      var btn_Status = document.getElementById("btn_Status");
+      //sort by name
+      btn_Name.addEventListener("click", function () {
+        document.getElementsByClassName("tabela")[0].innerHTML = "";
+        fill(array.sort(dynamicSort("name")));
+      });
+      //sort by date
+      btn_Date.addEventListener("click", function () {
+        document.getElementsByClassName("tabela")[0].innerHTML = "";
+        fill(array.sort(dynamicSort("date")));
+      });
+      //sort by status
+      btn_Status.addEventListener("click", function () {
+        document.getElementsByClassName("tabela")[0].innerHTML = "";
+        fill(array.sort(dynamicSort("status")));
+      });
+      //fill the table
+      function fill(array) {
+        for (i = 0; i < array.length; i++) {
+          if (array[i].status == "true") {
+            check = "checked";
+          } else {
+            check = "unchecked";
+          }
+          document.getElementsByClassName(
+            "tabela"
+          )[0].innerHTML += `<tr class="table-item"><td id="edited"  onfocusout="editN(this)" contenteditable="true" class=${i}>${array[i].name}</td><td contenteditable="true" onfocusout="editD(this)" class="date ${i}">${array[i].date}</td><td><input onclick="stat(this)"  type="checkbox" name="status" ${check} id="status"></td> <td><button onclick="del(this)" id="rem">X</button></td></tr>`;
+        }
+      }
+
+      //sort function
+      function dynamicSort(property) {
+        var sortOrder = 1;
+        if (property[0] === "-") {
+          sortOrder = -1;
+          property = property.substr(1);
+        }
+        return function (a, b) {
+          var result =
+            a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+          return result * sortOrder;
+        };
+      }
+
+      //remove function
+      function del(e) {
+        brother =
+          e.parentNode.previousSibling.previousSibling.previousSibling
+            .previousSibling.innerText;
+        for (i = 0; i < array.length; i++) {
+          if (array[i].name == brother) {
+            array.splice(i, 1);
+          }
+        }
+        e.parentNode.parentNode.remove();
+      }
+
+      //filter by date
+
+      function search() {
+        filter = document.getElementById("browse").value;
+        items = document.getElementsByClassName("table-item");
+        for (i = 0; i < items.length; i++) {
+          txtValue = document.getElementsByClassName("date")[i].innerText;
+          if (txtValue.indexOf(filter) > -1) {
+            document.getElementsByClassName("table-item")[i].style.display = "";
+          } else {
+            document.getElementsByClassName("table-item")[i].style.display =
+              "none";
+          }
+        }
+      }
+      //filter by checkbox
+      function checkCheck() {
+        if (document.getElementById("checkCheck").checked) {
+          // document.getElementsByClassName("tabela")[0].innerHTML = "";
+          // fill(array)
+          for (i = 0; i < array.length; i++) {
+            if (array[i].status != "true") {
+              document.getElementsByClassName(`table-item`)[i].style.display =
+                "none";
+            }
+          }
+        } else {
+          for (i = 0; i < array.length; i++) {
+            document.getElementsByClassName(`table-item`)[i].style.display =
+              "table-row";
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

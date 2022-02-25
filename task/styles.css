@@ -1,0 +1,48 @@
+*{
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Indie Flower', cursive;
+  }
+  .papper{
+    background-color: #fadb6f;
+    height: 70vh;
+    width: 30%;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  }
+  .topline{
+    width: 100%;
+    height: 30px;
+    background-color: #d4a017;
+
+  }
+  input{
+    background-color: #f0ead6;
+    height: 3vh;
+    
+  }
+  .inputs{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+td{
+  text-align: center;
+
+}
+table{
+  width: 100%;
+}
+th{
+  font-size: 1.2em;
+  cursor: pointer;
+}
+#browse{
+ width: 100px;
+}
